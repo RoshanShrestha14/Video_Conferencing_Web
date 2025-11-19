@@ -1,0 +1,252 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.landingPage {
+  height: 100dvh;
+  width: 100%;
+  background-image: url("media/homeImage.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+  background-blend-mode: darken;
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+.container {
+  height: 100%;
+  width: 100%;
+  font-family: "Arial, Helvetica, sans-serif";
+  color: rgb(180, 245, 234);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  padding: 0 2rem;
+}
+
+.nav {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  display: flex;
+  gap: 2.5rem;
+  z-index: 10;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.navLink:hover {
+  color: #0fd2ff;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.heroContent {
+  max-width: 800px;
+  margin-left: 5%;
+  z-index: 2;
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.highlight {
+  background: linear-gradient(135deg, #0fd2ff, #006dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  font-weight: 400;
+  max-width: 600px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.features {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.8rem 1.2rem;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.featureItem:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+.featureIcon {
+  font-size: 1.2rem;
+}
+
+.btnBox {
+  margin-top: 1.5rem;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.amazingBtn {
+  padding: 18px 45px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0fd2ff, #006dff);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 30px rgba(0, 109, 255, 0.4);
+}
+
+.amazingBtn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 200%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.25);
+  transform: skewX(-25deg);
+  transition: 0.5s ease;
+}
+
+.amazingBtn:hover::before {
+  left: 120%;
+}
+
+.amazingBtn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(0, 109, 255, 0.6);
+}
+
+.amazingBtn:active {
+  transform: scale(0.97);
+}
+
+.btnArrow {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.amazingBtn:hover .btnArrow {
+  transform: translateX(5px);
+}
+
+.ctaNote {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+  
+  .heroContent {
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .nav {
+    top: 20px;
+    right: 20px;
+    gap: 1.5rem;
+  }
+  
+  .navLink {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+  
+  .features {
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .featureItem {
+    padding: 0.6rem 1rem;
+  }
+  
+  .btnBox {
+    align-items: center;
+  }
+  
+  .amazingBtn {
+    padding: 16px 35px;
+    font-size: 1.1rem;
+  }
+  
+  .floatingElement1, .floatingElement2 {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+  
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .nav {
+    gap: 1rem;
+  }
+  
+  .navLink {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+}
