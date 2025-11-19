@@ -1,0 +1,42 @@
+.container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.mainHeading {
+  font-size: 2rem;
+  font-weight: bolder;
+  color: #f0eee9ff;
+  margin-bottom: 0.5rem;
+}
+
+.subHeading {
+  font-size: 1.2rem;
+  color: #f0eee9dc;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .mainHeading {
+    font-size: 1.7rem;
+  }
+  
+  .subHeading {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainHeading {
+    font-size: 1.5rem;
+  }
+  
+  .subHeading {
+    font-size: 1rem;
+  }
+}

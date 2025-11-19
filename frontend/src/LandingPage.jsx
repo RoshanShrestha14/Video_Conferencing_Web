@@ -24,13 +24,12 @@ function LandingPage() {
 
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
-              Share moments with your loved ones,
+             Share moments, connect deeply, and communicate effortlessly 
               <span className={styles.highlight}> anytime, anywhere.</span>
             </h1>
 
             <p className={styles.heroSubtitle}>
-              Connect instantly with friends and family through seamless video
-              calls, messaging, and shared experiences.
+              Your space for smarter video calls — meet, chat, and collaborate anytime.
             </p>
 
             <div className={styles.features}>
