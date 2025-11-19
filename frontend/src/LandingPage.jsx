@@ -1,16 +1,25 @@
 import React from "react";
 import styles from "./LandingPage.module.css";
+import { Link } from "react-router-dom";
 
 function LandingPage() {
   return (
     <>
       <div className={styles.landingPage}>
         <div className={styles.animatedBg}></div>
-        
+
         <div className={styles.container}>
           <div className={styles.nav}>
-            <div><a className={styles.navLink}>Register</a></div>
-            <div><a className={styles.navLink}>Log In</a></div>
+            <div>
+              <Link to="/signup" className={styles.navLink}>
+                Register
+              </Link>
+            </div>
+            <div>
+             <Link to="/login" className={styles.navLink}>
+                log In
+              </Link>
+            </div>
           </div>
 
           <div className={styles.heroContent}>
@@ -18,10 +27,10 @@ function LandingPage() {
               Share moments with your loved ones,
               <span className={styles.highlight}> anytime, anywhere.</span>
             </h1>
-            
+
             <p className={styles.heroSubtitle}>
-              Connect instantly with friends and family through seamless video calls, 
-              messaging, and shared experiences.
+              Connect instantly with friends and family through seamless video
+              calls, messaging, and shared experiences.
             </p>
 
             <div className={styles.features}>
@@ -40,11 +49,16 @@ function LandingPage() {
             </div>
 
             <div className={styles.btnBox}>
-              <button className={styles.amazingBtn}>
+              <Link to="/signup" className={styles.navLink} >
+                <button className={styles.amazingBtn}>
                 <span className={styles.btnText}>Get Started Free</span>
                 <span className={styles.btnArrow}>→</span>
               </button>
-              <p className={styles.ctaNote}>No credit card required • Free forever</p>
+              </Link>
+              
+              <p className={styles.ctaNote}>
+                No credit card required • Free forever
+              </p>
             </div>
           </div>
 

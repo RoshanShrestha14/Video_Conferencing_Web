@@ -41,7 +41,7 @@
 }
 
 .navLink {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.589);
   font-weight: 600;
   font-size: 1.1rem;
   cursor: pointer;
@@ -49,6 +49,7 @@
   border-radius: 25px;
   transition: all 0.3s ease;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  
 }
 
 .navLink:hover {
@@ -64,7 +65,7 @@
 }
 
 .heroTitle {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-size: clamp(2rem, 4vw, 4rem);
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 1.5rem;
@@ -188,13 +189,14 @@
   .container {
     padding: 0 1.5rem;
     text-align: center;
+     justify-content: flex-start; 
+    padding-top: 100px;
   }
   
   .heroContent {
-    margin-left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+   margin: 0 auto; 
+    text-align: center; 
+   
   }
   
   .nav {
@@ -232,10 +234,16 @@
 }
 
 @media (max-width: 480px) {
-  .heroTitle {
-    font-size: 2rem;
+  .heroContent {
+  margin: 0 auto; 
+   
   }
-  
+  .heroTitle {
+    font-size: 1.5rem;
+  }
+  .highlight{
+    font-size: 1.5rem;
+  }
   .features {
     flex-direction: column;
     align-items: center;
