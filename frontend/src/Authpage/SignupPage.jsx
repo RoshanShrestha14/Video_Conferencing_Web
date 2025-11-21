@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./SignupPage.module.css";
 import ContactEmergencyIcon from "@mui/icons-material/ContactEmergency";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
+  let navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -23,12 +25,18 @@ function SignupPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:3002/auth/signup", {
-        fullName: formData.fullName,
-        userName: formData.username,
-        password: formData.password,
-      });
-
+      const res = await axios.post(
+        "http://localhost:3002/auth/signup",
+        {
+          fullName: formData.fullName,
+          userName: formData.username,
+          password: formData.password,
+        },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        navigate("/home");
+      }
       setMessage(res.data.message);
 
       setFormData({
@@ -96,13 +104,14 @@ function SignupPage() {
             </form>
             <div className={styles.joiner}>
               <span>
-                <p >Already have an account?</p>
+                <p>Already have an account?</p>
               </span>{" "}
               &nbsp;
               <span>
                 <p>
-                  <Link to="/login" className="font-bold">Login here</Link>
-                  
+                  <Link to="/login" className="font-bold">
+                    Login here
+                  </Link>
                 </p>
               </span>
             </div>

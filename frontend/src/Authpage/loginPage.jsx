@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import styles from "./SignupPage.module.css";
 import ContactEmergencyIcon from "@mui/icons-material/ContactEmergency";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-const [message, setMessage] = useState("");
-
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -22,12 +24,22 @@ const [message, setMessage] = useState("");
     e.preventDefault();
 
     try {
-      let res = await axios.post("http://localhost:3002/auth/login", {
-        userName: formData.username,
-        password: formData.password,
-      });
+      let res = await axios.post(
+        "http://localhost:3002/auth/login",
+        {
+          userName: formData.username,
+          password: formData.password,
+        },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        setMessage(res.data.message);
+        navigate("/home");
+      } else {
+        setMessage(res.data.message || "Login failed");
+      }
+
       setMessage(res.data.message);
-      
 
       setFormData({
         username: "",
@@ -35,13 +47,10 @@ const [message, setMessage] = useState("");
       });
     } catch (err) {
       console.error("Error:", err);
-        const backendMessage = err.response?.data?.message || "Login failed";
-      setMessage(backendMessage); 
-      
+      const backendMessage = err.response?.data?.message || "Login failed";
+      setMessage(backendMessage);
     }
-    console.log("Response:", message);
   };
-
 
   return (
     <>
@@ -66,7 +75,7 @@ const [message, setMessage] = useState("");
             <form className={styles.formBox} onSubmit={handleSubmit}>
               <input
                 type="text"
-                name="username" 
+                name="username"
                 value={formData.username}
                 onChange={handleChange}
                 placeholder="Username"
@@ -75,7 +84,7 @@ const [message, setMessage] = useState("");
 
               <input
                 type="password"
-                name="password" 
+                name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"

@@ -2,11 +2,9 @@ const { Schema } = require("mongoose");
 const { model } = require("mongoose");
 
 const meetingSchema = new Schema({
-  user_id: {
-    type: String,
-  },
+  creator: { type: Schema.Types.ObjectId, ref: "user", required: true },
   meetingCode: {
-    type: Number,
+    type: String,
     require: true,
   },
   date: {
@@ -16,6 +14,6 @@ const meetingSchema = new Schema({
   },
 });
 
-const meetingModel = new model("meeting",meetingSchema);
+const meetingModel = new model("meeting", meetingSchema);
 
 module.exports = meetingModel;

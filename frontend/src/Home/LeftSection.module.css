@@ -1,10 +1,10 @@
-
 .grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 30px;
   max-width: 1200px;
   margin: 0 auto 60px;
+  padding: 20px;
 }
 
 @media (min-width: 768px) {
@@ -23,6 +23,7 @@
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
+  width: 100%; /* Ensure full width within grid */
 }
 
 .card:hover {
@@ -57,9 +58,22 @@
   margin-bottom: 20px;
 }
 
+/* Form should take full width */
+.inputGroup form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 @media (min-width: 480px) {
   .inputGroup {
     flex-direction: row;
+  }
+  
+  .inputGroup form {
+    flex-direction: row;
+    align-items: center;
   }
 }
 
@@ -71,6 +85,7 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   background: #f8fafc;
+  width: 100%; /* Full width on mobile */
 }
 
 .input:focus {
@@ -90,6 +105,13 @@
   transition: all 0.3s ease;
   text-transform: none;
   white-space: nowrap;
+  width: 100%; /* Full width on mobile */
+}
+
+@media (min-width: 480px) {
+  .button {
+    width: auto; /* Auto width on desktop */
+  }
 }
 
 .primaryButton {

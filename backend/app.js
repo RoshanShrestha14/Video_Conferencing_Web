@@ -5,9 +5,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const authRoutes  = require("./routes/authRoutes");
-
-
+const authRoutes = require("./routes/authRoutes");
+const meetingRoutes = require("./routes/meetingRoutes");
 
 const app = express();
 
@@ -28,7 +27,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // For form data
 
-
 app.use(
   cors({
     origin: ["http://localhost:5173"],
@@ -37,11 +35,8 @@ app.use(
   })
 );
 
-
-
 //routes
-app.use("/auth",authRoutes);
-
-
+app.use("/auth", authRoutes);
+app.use("/meeting", meetingRoutes);
 
 module.exports = app;

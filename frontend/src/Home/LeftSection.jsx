@@ -1,15 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./LeftSection.module.css";
+import axios from "axios";
+
 function LeftSection() {
+  const [text, setText] = useState("");
+
+  const createMeeting = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3002/meeting/new",
+        {},
+        { withCredentials: true }
+      );
+
+      if(response.data.success)
+      {
+        console.log("Meeting created:", response.data);
+        let  meetingCode = response.data.meeting.meetingCode;
+         console.log("Meeting Code:", meetingCode);
+      }
+    } catch (err) {
+      console.error("Error creating meeting:", err);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setText("");
+    console.log("Joining meeting with code:", text);
+  };
+
   return (
-    <div className={styles.grid} >
+    <div className={styles.grid}>
       <div className={styles.card}>
         <div className={styles.icon}>🎥</div>
         <h2 className={styles.cardTitle}>New Meeting</h2>
         <p className={styles.cardDescription}>
           Start an instant meeting with one click
         </p>
-        <button className={`${styles.button} ${styles.primaryButton}`}>
+        <button
+          className={`${styles.button} ${styles.primaryButton}`}
+          onClick={createMeeting}
+        >
           Create New Meeting
         </button>
         <p className={styles.cardFooter}>
@@ -21,14 +54,22 @@ function LeftSection() {
         <div className={styles.icon}>🔗</div>
         <h2 className={styles.cardTitle}>Join Meeting</h2>
         <div className={styles.inputGroup}>
-          <input
-            type="text"
-            placeholder="Enter meeting code (e.g., ABC123XYZ)"
-            className={styles.input}
-          />
-          <button className={`${styles.button} ${styles.successButton}`}>
-            Join Meeting
-          </button>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Enter meeting code (e.g., ABC123XYZ)"
+              className={styles.input}
+            />{" "}
+            &nbsp;&nbsp;
+            <button
+              className={`${styles.button} ${styles.successButton}`}
+              type="submit"
+            >
+              Join Meeting
+            </button>
+          </form>
         </div>
         <p className={styles.cardFooter}>Enter code provided by meeting host</p>
       </div>

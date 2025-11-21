@@ -3,10 +3,8 @@
     padding: 0;
     box-sizing: border-box;
 }
-.container{
-   
-    height: 100%;
+.container {
+    min-height: 100vh;  /* ✅ Correct unit */
     width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
+    background: #667eea;
 }
