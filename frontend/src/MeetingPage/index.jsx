@@ -1,13 +1,18 @@
+// Room/index.js
 import React from "react";
+import Header from "./Header";
+import MainContent from "./MainContent";
+import ControlsBar from "./ControlsBar";
 import styles from "./Room.module.css";
-import Header from "./components/Header.jsx";
 
-function index() {
+function Room() {
   return (
-    <div className="roomContainer">
+    <div className={styles.roomContainer}>
       <Header />
+      <MainContent />
+      <ControlsBar />
     </div>
   );
 }
 
-export default index;
+export default Room;
