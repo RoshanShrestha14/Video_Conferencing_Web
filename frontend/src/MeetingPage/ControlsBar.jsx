@@ -1,6 +1,12 @@
 // Room/ControlsBar.jsx
 import React from "react";
 import styles from "./Room.module.css";
+import MicOffIcon from '@mui/icons-material/MicOff';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
+import ScreenShareIcon from '@mui/icons-material/ScreenShare';
+import ChatIcon from '@mui/icons-material/Chat';
+import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
+
 
 function ControlsBar() {
   return (
@@ -11,25 +17,23 @@ function ControlsBar() {
       
       <div className={styles.controlsCenter}>
         <button className={styles.controlButton}>
-          🎤 Mute
+          <MicOffIcon/> Mute
         </button>
         <button className={styles.controlButton}>
-          📹 Stop Video
+          <VideocamOffIcon/> Stop Video
         </button>
         <button className={styles.controlButton}>
-          📱 Share Screen
+          <ScreenShareIcon/> Share Screen
         </button>
         <button className={styles.controlButton}>
-          💬 Chat
+          <ChatIcon/>Chat
         </button>
-        <button className={styles.controlButton}>
-          ⚙️ Settings
-        </button>
+
       </div>
       
       <div className={styles.controlsRight}>
         <button className={styles.leaveButton}>
-          📞 Leave Meeting
+          <PhoneEnabledIcon/> Leave Meeting
         </button>
       </div>
     </footer>

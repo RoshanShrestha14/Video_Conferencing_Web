@@ -1,14 +1,18 @@
 // Room/ParticipantsList.jsx
 import React from "react";
 import styles from "./Room.module.css";
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
+
+
 
 function ParticipantsList() {
   const participants = [
     { id: 1, name: "You", isVideoOn: true, isAudioOn: true },
-    { id: 2, name: "John Doe", isVideoOn: true, isAudioOn: false },
-    { id: 3, name: "Jane Smith", isVideoOn: false, isAudioOn: true },
-    { id: 4, name: "Mike Johnson", isVideoOn: true, isAudioOn: true }
-  ];
+    { id: 2, name: "Roshan", isVideoOn: false, isAudioOn: true },
+  ]
 
   return (
     <div className={styles.sidebarSection}>
@@ -23,8 +27,8 @@ function ParticipantsList() {
               {participant.name}
             </span>
             <div className={styles.participantStatus}>
-              {participant.isAudioOn ? '🎤' : '🔇'}
-              {participant.isVideoOn ? '📹' : '❌'}
+              {participant.isAudioOn ? <MicIcon/> : <MicOffIcon/>}
+              {participant.isVideoOn ? <VideocamIcon/> : <VideocamOffIcon/>}
             </div>
           </div>
         ))}

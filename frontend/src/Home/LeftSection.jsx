@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import styles from "./LeftSection.module.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LeftSection() {
+    const navigate = useNavigate();
   const [text, setText] = useState("");
 
   const createMeeting = async () => {
@@ -15,9 +17,8 @@ function LeftSection() {
 
       if(response.data.success)
       {
-        console.log("Meeting created:", response.data);
         let  meetingCode = response.data.meeting.meetingCode;
-         console.log("Meeting Code:", meetingCode);
+          navigate(`/home/${meetingCode}`)
       }
     } catch (err) {
       console.error("Error creating meeting:", err);
@@ -26,9 +27,12 @@ function LeftSection() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+   
+ 
 
     setText("");
-    console.log("Joining meeting with code:", text);
+   
   };
 
   return (

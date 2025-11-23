@@ -133,6 +133,7 @@
   overflow: hidden;
   aspect-ratio: 16/9;
   min-height: 200px;
+
 }
 
 .videoPlaceholder {
@@ -141,6 +142,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  margin: 0.5rem;
+  background-color: #38f9f673;
 }
 
 .videoStream {

@@ -5,16 +5,14 @@ const {socketHandler} = require("./sockets/socketsHandler");
 const PORT = process.env.PORT || 3002;
 const httpServer = createServer(app);
 
-// Attach Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:5173"],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
-// Use separate socket handler file
 socketHandler(io);
 
 httpServer.listen(PORT, () => {
