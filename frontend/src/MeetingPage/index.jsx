@@ -1,29 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import { useParams } from "react-router-dom";
-import { useSocket } from "../context/socketContext";
 
 import MainContent from "./MainContent";
 import ControlsBar from "./ControlsBar";
 import styles from "./Room.module.css";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import axios from "axios";
+import { useSocket } from "../context/socketContext";
 
 function Room() {
-  const { meetingCode } = useParams();
   const socket = useSocket();
-  useEffect(() => {
-    if (!socket || !meetingCode) return;
+  const { meetingCode } = useParams();
+  const navigate = useNavigate();
+  const [cookies, removeCookie] = useCookies([]);
+  const [username, setUsername] = useState("");
 
-    socket.on("connect", () => {
-      console.log("Connected with ID:", socket.id);
-    });
-    return () => {
-      socket.off("connect", handleConnect);
+  useEffect(() => {
+    const verifyCookie = async () => {
+      try {
+        const { data } = await axios.post(
+          "http://localhost:3002/auth/check",
+          {},
+          { withCredentials: true }
+        );
+        const { success, user } = data;
+        if (success) {
+          setUsername(user);
+        } else {
+          removeCookie("token");
+          navigate("/login");
+        }
+      } catch (err) {
+        console.error("Auth check failed:", err);
+        removeCookie("token");
+        navigate("/login");
+      }
     };
-  }, [socket, meetingCode]);
+
+    verifyCookie();
+  }, [navigate, removeCookie]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit("join-meeting", meetingCode);
+
+       socket.on("user-joined", (data) => {
+      console.log("User joined:", data);
+    });
+  }, [socket]);
 
   return (
     <div className={styles.roomContainer}>
-      <Header code={meetingCode} />
+      <Header code={meetingCode} userName={username} />
       <MainContent />
       <ControlsBar />
     </div>

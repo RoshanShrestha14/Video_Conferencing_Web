@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
   let navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -23,6 +25,7 @@ function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -35,7 +38,9 @@ function SignupPage() {
         { withCredentials: true }
       );
       if (res.data.success) {
-        navigate("/home");
+        setTimeout(() => {
+          navigate("/home");
+        }, 500);
       }
       setMessage(res.data.message);
 
@@ -48,12 +53,26 @@ function SignupPage() {
       console.error("Error:", err);
       const backendMessage = err.response?.data?.message || "Login failed";
       setMessage(backendMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <div className={styles.container}>
+        <div className={styles.nav}>
+          <div>
+            <Link to="/signup" className={styles.navLink}>
+              Register
+            </Link>
+          </div>
+          <div>
+            <Link to="/login" className={styles.navLink}>
+              log In
+            </Link>
+          </div>
+        </div>
         <div className={styles.incontainer}>
           <div className={styles.signupBox}>
             <h1 className="text-center text-[1.7rem] font-bold mt-4 text-[#0d294f]">
@@ -76,7 +95,7 @@ function SignupPage() {
               {/* Changed onClick to onSubmit */}
               <input
                 type="text"
-                name="fullName" // Added name attribute
+                name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Full Name"
@@ -84,7 +103,7 @@ function SignupPage() {
               />
               <input
                 type="text"
-                name="username" // Added name attribute
+                name="username"
                 value={formData.username}
                 onChange={handleChange}
                 placeholder="Username"
@@ -92,14 +111,21 @@ function SignupPage() {
               />
               <input
                 type="password"
-                name="password" // Added name attribute
+                name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
                 className={styles.inputField}
               />
-              <button type="submit" className={styles.submitBtn}>
-                Sign Up
+              {message && <div style={{color:"#f45e5eff",
+                fontSize:"1.2rem"
+              }}> <strong>{message}</strong></div>}
+              <button
+                type="submit"
+                disabled={loading}
+                className={styles.submitBtn}
+              >
+                {loading ? "Signing up…" : "sign up "}
               </button>
             </form>
             <div className={styles.joiner}>

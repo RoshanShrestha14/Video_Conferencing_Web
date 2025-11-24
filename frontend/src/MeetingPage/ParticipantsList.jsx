@@ -9,10 +9,7 @@ import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 
 
 function ParticipantsList() {
-  const participants = [
-    { id: 1, name: "You", isVideoOn: true, isAudioOn: true },
-    { id: 2, name: "Roshan", isVideoOn: false, isAudioOn: true },
-  ]
+  const participants =[]
 
   return (
     <div className={styles.sidebarSection}>

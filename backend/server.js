@@ -10,8 +10,15 @@ const io = new Server(httpServer, {
     origin: ["http://localhost:5173"],
     methods: ["GET", "POST"],
     credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"]
+
   },
+  connectTimeout: 45000,
+  pingTimeout: 20000,
+  pingInterval: 25000
 });
+
+
 
 socketHandler(io);
 

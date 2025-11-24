@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function LeftSection() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [text, setText] = useState("");
 
   const createMeeting = async () => {
@@ -15,10 +15,9 @@ function LeftSection() {
         { withCredentials: true }
       );
 
-      if(response.data.success)
-      {
-        let  meetingCode = response.data.meeting.meetingCode;
-          navigate(`/home/${meetingCode}`)
+      if (response.data.success) {
+        let meetingCode = response.data.meeting.meetingCode;
+        navigate(`/home/${meetingCode}`); 
       }
     } catch (err) {
       console.error("Error creating meeting:", err);
@@ -26,13 +25,9 @@ function LeftSection() {
   };
 
   const handleSubmit = (e) => {
+    if (text.trim() === "") return;
     e.preventDefault();
-    
-   
- 
-
-    setText("");
-   
+    navigate(`/home/${text}`);
   };
 
   return (

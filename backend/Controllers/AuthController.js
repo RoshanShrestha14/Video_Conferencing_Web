@@ -22,11 +22,11 @@ module.exports.Signup = async (req, res) => {
     const token = createSecretToken(user._id);
     res.cookie("token", token, {
       withCredentials: true,
-      httpOnly: false,
+      httpOnly: true,
     });
     res
       .status(201)
-      .json({ message: "User signed in successfully", success: true, user });
+      .json({ success: true, user });
   } catch (error) {
     console.error("Signup Error",error);
     res.status(500).json({ 
@@ -65,7 +65,7 @@ module.exports.Login = async (req, res, next) => {
    const token = createSecretToken(user._id);
     res.cookie("token", token, {
       withCredentials: true,
-      httpOnly: false,
+      httpOnly: true,
     });
 
     const userResponse = {
@@ -75,7 +75,7 @@ module.exports.Login = async (req, res, next) => {
     };
 
     res.status(200).json({ 
-      message: "Login successful", 
+  
       success: true,
       user: userResponse 
     });

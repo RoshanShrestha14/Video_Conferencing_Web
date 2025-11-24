@@ -12,18 +12,23 @@ import { SocketProvider } from "./context/socketContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
-    <CookiesProvider>
-      <SocketProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/home" element={<HomeDashboard />} />
-            <Route path="/home/:meetingCode" element={<Index />} />
-          </Routes>
-        </Router>
-      </SocketProvider>
-    </CookiesProvider>
+  <CookiesProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/home" element={<HomeDashboard />} />
+        <Route
+          path="/home/:meetingCode"
+          element={
+            <SocketProvider>
+              <Index />
+            </SocketProvider>
+          }
+        />
+      </Routes>
+    </Router>
+  </CookiesProvider>
   // </StrictMode>
 );

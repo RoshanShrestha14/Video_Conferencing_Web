@@ -1,26 +1,37 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import React, { useRef, createContext, useContext, useEffect, useState } from "react";
+import { io } from "socket.io-client"; // IMPORTANT
 
 const SocketContext = createContext();
 
-export const useSocket = () => {
-  return useContext(SocketContext);
-};
+export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
+  const socketRef = useRef(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3002", {
+    socketRef.current = io("http://localhost:3002", {
       withCredentials: true,
+      autoConnect: true,
     });
 
-    setSocket(newSocket);
-
-    return () => newSocket.close();
+    socketRef.current.on("connect", () => {
+      console.log(`Socket connected: ${socketRef.current.id}`);
+      setIsReady(true);  
+    });
+    return () => {
+      if (socketRef.current) {
+        console.log("Closing socket...");
+        socketRef.current.close();
+      }
+    };
   }, []);
 
+  if (!isReady) return null;
+
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={socketRef.current}>
+      {children}
+    </SocketContext.Provider>
   );
 };

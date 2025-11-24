@@ -3,7 +3,7 @@ import styles from "./HomeDashboard.module.css";
 import Hero from "./Hero.jsx";
 import LeftSection from "./LeftSection.jsx";
 import History from "./History.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
@@ -13,28 +13,24 @@ const HomeDashboard = () => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
-  useEffect(() => {
 
+  useEffect(() => {
     const verifyCookie = async () => {
       try {
-        if (!cookies.token) {
-          return navigate("/login");
-        }
         const { data } = await axios.post(
           "http://localhost:3002/auth/check",
           {},
           { withCredentials: true }
         );
-
         const { success, user } = data;
         if (success) {
           setUsername(user);
-          toast(`Welcome ${user}`, { position: "top-right" });
         } else {
           removeCookie("token");
           navigate("/login");
         }
       } catch (err) {
+        console.error("Auth check failed:", err);
         removeCookie("token");
         navigate("/login");
       }
@@ -45,14 +41,16 @@ const HomeDashboard = () => {
 
   return (
     <div className={styles.container}>
-      <Hero />
+      <Hero user={username} />
       <div style={{ marginTop: "2rem" }}>
         <LeftSection />
       </div>
       <div style={{ marginTop: "2rem" }}>
         <History />
       </div>
+      <ToastContainer />
     </div>
   );
 };
+
 export default HomeDashboard;
