@@ -1,5 +1,5 @@
 import React, { useRef, createContext, useContext, useEffect, useState } from "react";
-import { io } from "socket.io-client"; // IMPORTANT
+import { io } from "socket.io-client"; 
 
 const SocketContext = createContext();
 
@@ -27,7 +27,7 @@ export const SocketProvider = ({ children }) => {
     };
   }, []);
 
-  if (!isReady) return null;
+  if (!isReady) return console.log("connecting");
 
   return (
     <SocketContext.Provider value={socketRef.current}>
