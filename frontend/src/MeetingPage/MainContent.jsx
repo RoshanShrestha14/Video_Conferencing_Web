@@ -4,10 +4,10 @@ import VideoSection from "./VideoSection";
 import Sidebar from "./SlideBar";
 import styles from "./Room.module.css"
 
-function MainContent() {
+function MainContent({userName,userId}) {
   return (
     <div className={styles.mainContent}>
-      <VideoSection />
+      <VideoSection  username={userName}  userId={userId}/>
       <Sidebar />
     </div>
   );

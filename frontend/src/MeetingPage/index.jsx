@@ -16,6 +16,7 @@ function Room() {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
+  const [userId, setuserId] = useState();
 
   useEffect(() => {
     const verifyCookie = async () => {
@@ -46,15 +47,18 @@ function Room() {
     if (!socket) return;
     socket.emit("join-meeting", meetingCode);
 
-       socket.on("user-joined", (data) => {
+    socket.on("user-joined", (data) => {
       console.log("User joined:", data);
+      setuserId(data.userId);
+      console.log(userId)
     });
   }, [socket]);
+  
 
   return (
     <div className={styles.roomContainer}>
       <Header code={meetingCode} userName={username} />
-      <MainContent />
+      <MainContent userName={username} userId = {userId} />
       <ControlsBar />
     </div>
   );

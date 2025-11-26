@@ -17,7 +17,7 @@ function LeftSection() {
 
       if (response.data.success) {
         let meetingCode = response.data.meeting.meetingCode;
-        navigate(`/home/${meetingCode}`); 
+        navigate(`/roomPreview/${meetingCode}`); 
       }
     } catch (err) {
       console.error("Error creating meeting:", err);
@@ -27,7 +27,7 @@ function LeftSection() {
   const handleSubmit = (e) => {
     if (text.trim() === "") return;
     e.preventDefault();
-    navigate(`/home/${text}`);
+    navigate(`/roomPreview/${text}`);
   };
 
   return (

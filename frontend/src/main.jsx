@@ -9,6 +9,8 @@ import HomeDashboard from "./Home/Home.jsx";
 import { CookiesProvider } from "react-cookie";
 import Index from "./MeetingPage/index.jsx";
 import { SocketProvider } from "./context/socketContext.jsx";
+import RoomPreview from "./RoomPreview/RoomPreview.jsx";
+import { MediaProvider } from "./context/MediaProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
@@ -20,11 +22,21 @@ createRoot(document.getElementById("root")).render(
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<HomeDashboard />} />
         <Route
+          path="/roomPreview/:meetingCode"
+          element={
+            <MediaProvider>
+              <RoomPreview />
+            </MediaProvider>
+          }
+        />
+        <Route
           path="/home/:meetingCode"
           element={
-            <SocketProvider>
-              <Index />
-            </SocketProvider>
+            <MediaProvider>
+              <SocketProvider>
+                <Index />
+              </SocketProvider>
+            </MediaProvider>
           }
         />
       </Routes>
