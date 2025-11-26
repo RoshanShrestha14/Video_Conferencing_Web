@@ -43,9 +43,6 @@ app.get("/destroy",async(req,res)=>{
 res.json("del all data of meeting ")
 
   
-
-
-  
 })
 
 
