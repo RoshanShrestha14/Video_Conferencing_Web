@@ -2,15 +2,78 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Room.module.css";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import { useMedia } from "../context/MediaProvider";
+import { useSocket } from "../context/socketContext";
+import SimplePeer from "simple-peer";
 
 function VideoSection({ username, userId }) {
   const { localStream, isVideoOn, isAudioOn } = useMedia();
+  const socket = useSocket();
 
   const [participants, setParticipants] = useState([]);
   const videoRefs = useRef({});
-  useEffect(() => {
+  const peersRef = useRef();
 
-  
+  const createPeerConnection = (otherSocketId, initiator, offerData = null) => {
+    const peer = new SimplePeer({
+      initiator: initiator,
+      stream: localStream,
+      trickle: true,
+    });
+
+    peer.on("signal", (data) => {
+      if (data.type === "offer") {
+        socket.emit("webrtc-offer", {
+          to: otherSocketId,
+          offer: data,
+        });
+      } else if (data.type === "answer") {
+        socket.emit("webrtc-answer", {
+          to: otherSocketId,
+          answer: data,
+        });
+      } else {
+        socket.emit("ice-candidate", {
+          to: otherSocketId,
+          candidate: data,
+        });
+      }
+    });
+
+    peer.on("stream", (remoteStream) => {
+      addRemoteVideo(otherSocketId, remoteStream);
+    });
+
+    peersRef.current[otherSocketId] = peer;
+
+    return peer;
+  };
+
+  useEffect(() => {
+    socket.on("user-joined", ({ userId, userName }) => {
+      console.log(
+        console.log(`socket id is ${userId} , socket userName is ${userName}`)
+      );
+      createPeerConnection(userId, true);
+    });
+
+    socket.on("webrtc-offer", (data) => {
+      createPeerConnection(data.from, false, data.offer);
+    });
+
+    socket.on("webrtc-answer", (data) => {
+      if (peersRef.current[data.from]) {
+        peersRef.current(data.from).signal(data.answer);
+      }
+    });
+
+    socket.on("ice-candidate", (data) => {
+      if (peersRef.current[data.from]) {
+        peersRef.current[data.from].signal(data.candidate);
+      }
+    });
+  }, [localStream]);
+
+  useEffect(() => {
     if (userId && username && localStream) {
       const newParticipant = {
         id: userId,
@@ -18,25 +81,21 @@ function VideoSection({ username, userId }) {
         isVideoOn: isVideoOn,
         isAudioOn: isAudioOn,
       };
-        setParticipants((prev)=>[
-          ...prev,
-          newParticipant]);
+      setParticipants([newParticipant]);
     }
   }, [userId, username, localStream, isVideoOn, isAudioOn]);
 
-useEffect(() => {
-  if (localStream && participants.length > 0) {
-    const videoEl = videoRefs.current[userId];
-    if (videoEl) {
-      videoEl.srcObject = localStream;
-      videoEl.play().catch((err) => {
-        console.error("Error playing video:", err);
-      });
+  useEffect(() => {
+    if (localStream && participants.length > 0) {
+      const videoEl = videoRefs.current[userId];
+      if (videoEl) {
+        videoEl.srcObject = localStream;
+        videoEl.play().catch((err) => {
+          console.error("Error playing video:", err);
+        });
+      }
     }
-  }
-
-
-}, [localStream, participants]);
+  }, [localStream, participants]);
 
   const setVideoRef = (element, participantId) => {
     if (element) {
