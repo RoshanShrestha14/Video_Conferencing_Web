@@ -52,7 +52,7 @@ function RoomPreview() {
         }
 
 
-  },localStream)
+  },[localStream])
 
   const handleJoinMeeting = () => {
     navigate(`/home/${meetingCode}`);

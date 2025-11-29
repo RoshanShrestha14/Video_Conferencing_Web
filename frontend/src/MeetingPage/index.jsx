@@ -17,51 +17,54 @@ function Room() {
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
   const [userId, setuserId] = useState();
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const verifyCookie = async () => {
-      try {
-        const { data } = await axios.post(
-          "http://localhost:3002/auth/check",
-          {},
-          { withCredentials: true }
-        );
-        const { success, user } = data;
-        if (success) {
-          setUsername(user);
-        } else {
-          removeCookie("token");
-          navigate("/login");
-        }
-      } catch (err) {
-        console.error("Auth check failed:", err);
+
+useEffect(() => {
+  const verifyCookie = async () => {
+    try {
+      const { data } = await axios.post("http://localhost:3002/auth/check", {}, { withCredentials: true });
+
+      if (data.success) {
+        setUsername(data.user);
+        setuserId(data.userId);
+      } else {
         removeCookie("token");
         navigate("/login");
       }
-    };
+    } catch (err) {
+      removeCookie("token");
+      navigate("/login");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    verifyCookie();
-  }, [navigate, removeCookie]);
+  verifyCookie();
+}, []);
 
   useEffect(() => {
+
+  
     if (!socket) return;
     socket.emit("join-meeting", meetingCode);
 
-    socket.on("user-joined", (data) => {
+     socket.on("user-joined", (data) => {
       console.log("User joined:", data);
-      setuserId(data.userId);
-      console.log(userId)
     });
   }, [socket]);
   
 
-  return (
-    <div className={styles.roomContainer}>
-      <Header code={meetingCode} userName={username} />
-      <MainContent userName={username} userId = {userId} />
-      <ControlsBar />
-    </div>
-  );
+if (loading) return <p>Loading...</p>;
+
+return (
+  <div className={styles.roomContainer}>
+    <Header code={meetingCode} userName={username} />
+    <MainContent userName={username} pUserId={userId} />
+    <ControlsBar />
+  </div>
+);
+
 }
 
 export default Room;

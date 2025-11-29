@@ -1,4 +1,5 @@
 const socketAuthMiddleware = require("../Middlewares/SocketAuthMiddleware");
+const allSocket = {};
 
 module.exports.socketHandler = (io) => {
   io.use(socketAuthMiddleware);
@@ -8,13 +9,19 @@ module.exports.socketHandler = (io) => {
       `socket user id : ${socket.userId}  and socket userName : ${socket.userName}`
     );
 
-    //for joining
+    allSocket[socket.id] = {
+      userId: socket.userId,
+      userName: socket.userName,
+    };
+
     socket.on("join-meeting", (meetingCode) => {
-      console.log(`meetingCode is ${meetingCode}`);
+      console.log(`User ${socket.userName} joined meeting: ${meetingCode}`);
       socket.join(meetingCode);
+      
       socket.to(meetingCode).emit("user-joined", {
-        userId: socket.id,
-        userName: socket.userName,
+        userId: socket.userId,      
+        userName: socket.userName,  
+        socketId: socket.id         
       });
     });
 
@@ -27,6 +34,7 @@ module.exports.socketHandler = (io) => {
     });
 
     socket.on("webrtc-offer", (data) => {
+      console.log(`WebRTC offer from ${socket.id} to ${data.to}`);
       io.to(data.to).emit("webrtc-offer", {
         from: socket.id,
         offer: data.offer,
@@ -34,17 +42,27 @@ module.exports.socketHandler = (io) => {
     });
 
     socket.on("webrtc-answer", (data) => {
+      console.log(`WebRTC answer from ${socket.id} to ${data.to}`);
       io.to(data.to).emit("webrtc-answer", {
         from: socket.id,
         answer: data.answer,
       });
+    });
 
-      socket.on("ice-candidate", (data) => {
-        io.to(data.to).emit("ice-candidate", {
-          from: socket.id,
-          candidate: data.candidate,
-        });
+    socket.on("ice-candidate", (data) => {
+      console.log(`ICE candidate from ${socket.id} to ${data.to}`);
+      io.to(data.to).emit("ice-candidate", {
+        from: socket.id,
+        candidate: data.candidate,
       });
     });
+
+
+    socket.on("disconnect", () => {
+      console.log(`User disconnected: ${socket.userName}`);
+      delete allSocket[socket.id];
+      
+    });
+
   });
 };

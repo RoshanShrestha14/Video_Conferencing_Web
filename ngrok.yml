@@ -1,0 +1,10 @@
+version: "2"
+tunnels:
+  frontend:
+    addr: 5173
+    proto: http
+    subdomain: myfrontend
+  backend:
+    addr: 3002
+    proto: http
+    subdomain: mybackend

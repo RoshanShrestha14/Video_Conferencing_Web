@@ -1,26 +1,40 @@
 // Room/ControlsBar.jsx
 import React from "react";
 import styles from "./Room.module.css";
-import MicOffIcon from '@mui/icons-material/MicOff';
-import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import ChatIcon from '@mui/icons-material/Chat';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
+import { useMedia } from "../context/MediaProvider";
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
+
 
 
 function ControlsBar() {
+
+  const {
+    isVideoOn,
+    isAudioOn,
+    toggleVideo,
+    toggleAudio,
+    stopAllTracks
+
+  } = useMedia();
   return (
     <footer className={styles.controlsBar}>
       <div className={styles.controlsLeft}>
-        <span className={styles.meetingTime}>00:15:23</span>
+        <span className={styles.meetingTime}>time</span>
       </div>
       
       <div className={styles.controlsCenter}>
-        <button className={styles.controlButton}>
-          <MicOffIcon/> Mute
+        <button className={styles.controlButton} onClick={toggleAudio}>
+              {isAudioOn ? <MicIcon/> : <MicOffIcon/>}
+        
         </button>
-        <button className={styles.controlButton}>
-          <VideocamOffIcon/> Stop Video
+        <button className={styles.controlButton} onClick={toggleVideo}>
+              {isVideoOn ? <VideocamIcon/> : <VideocamOffIcon/>}
         </button>
         <button className={styles.controlButton}>
           <ScreenShareIcon/> Share Screen
@@ -32,8 +46,9 @@ function ControlsBar() {
       </div>
       
       <div className={styles.controlsRight}>
-        <button className={styles.leaveButton}>
+        <button className={styles.leaveButton} onClick={stopAllTracks} >
           <PhoneEnabledIcon/> Leave Meeting
+          
         </button>
       </div>
     </footer>

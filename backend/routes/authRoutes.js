@@ -8,7 +8,7 @@ router.post("/login", Login);
 //check user route
 router.post('/check',userVerification, (req,res)=>{
     const user = req.User;
-     if (user) return res.json({ success: true, user: user.userName });
+     if (user) return res.json({ success: true, user: user.userName,userId:req.userId });
       else return res.json({ success: false });
 } );
 

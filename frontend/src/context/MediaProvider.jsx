@@ -1,10 +1,11 @@
-import React, { useContext, createContext, useRef, useState } from "react";
+import React, { useContext, createContext, useRef, useState,useNavigate } from "react";
 
 const MediaContext = createContext();
 
 export const useMedia = () => useContext(MediaContext);
 
 export const MediaProvider = ({ children }) => {
+
   const [isVideoAvailable, setIsVideoAvailable] = useState(false);
   const [isAudioAvailable, setIsAudioAvailable] = useState(false);
   const [isVideoOn, setIsVideoOn] = useState(true);
