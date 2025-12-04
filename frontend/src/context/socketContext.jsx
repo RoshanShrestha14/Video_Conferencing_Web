@@ -1,4 +1,7 @@
 import React, { useRef, createContext, useContext, useEffect, useState } from "react";
+const VITE_LOCAL_API = import.meta.env.VITE_LOCAL_API;
+
+
 import { io } from "socket.io-client"; 
 
 const SocketContext = createContext();
@@ -10,7 +13,7 @@ export const SocketProvider = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:3002", {
+    socketRef.current = io(VITE_LOCAL_API, {
       withCredentials: true,
       autoConnect: true,
     });

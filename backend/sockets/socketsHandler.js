@@ -1,5 +1,4 @@
 const socketAuthMiddleware = require("../Middlewares/SocketAuthMiddleware");
-const allSocket = {};
 
 module.exports.socketHandler = (io) => {
   io.use(socketAuthMiddleware);
@@ -9,19 +8,36 @@ module.exports.socketHandler = (io) => {
       `socket user id : ${socket.userId}  and socket userName : ${socket.userName}`
     );
 
-    allSocket[socket.id] = {
-      userId: socket.userId,
-      userName: socket.userName,
-    };
-
     socket.on("join-meeting", (meetingCode) => {
       console.log(`User ${socket.userName} joined meeting: ${meetingCode}`);
       socket.join(meetingCode);
-      
+      const existingUsers = [];
+
+      const room = io.sockets.adapter.rooms.get(meetingCode);
+      console.log(room);
+
+      if (room) {
+        // room is a Set - iterate through socket IDs
+        room.forEach((otherSocketId) => {
+          // Skip the new joiner themselves
+          if (otherSocketId !== socket.id) {
+            const otherSocketObject = io.sockets.sockets.get(otherSocketId);
+            existingUsers.push({
+              userId: otherSocketObject.userId,
+              userName: otherSocketObject.userName,
+              socketId: otherSocketObject.id,
+            });
+          }
+        });
+      }
+      if (existingUsers.length > 0) {
+        socket.emit("existing-users", existingUsers);
+      }
+
       socket.to(meetingCode).emit("user-joined", {
-        userId: socket.userId,      
-        userName: socket.userName,  
-        socketId: socket.id         
+        userId: socket.userId,
+        userName: socket.userName,
+        socketId: socket.id,
       });
     });
 
@@ -57,12 +73,8 @@ module.exports.socketHandler = (io) => {
       });
     });
 
-
     socket.on("disconnect", () => {
       console.log(`User disconnected: ${socket.userName}`);
-      delete allSocket[socket.id];
-      
     });
-
   });
 };

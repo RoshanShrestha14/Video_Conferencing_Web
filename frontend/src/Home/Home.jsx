@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import API from "../api/api";
+
 
 const HomeDashboard = () => {
   const navigate = useNavigate();
@@ -17,8 +19,8 @@ const HomeDashboard = () => {
   useEffect(() => {
     const verifyCookie = async () => {
       try {
-        const { data } = await axios.post(
-          "http://localhost:3002/auth/check",
+        const { data } = await API.post(
+          "/auth/check",
           {},
           { withCredentials: true }
         );

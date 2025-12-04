@@ -4,6 +4,7 @@ import ContactEmergencyIcon from "@mui/icons-material/ContactEmergency";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import API from "../api/api";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      let res = await axios.post(
-        "http://localhost:3002/auth/login",
+      let res = await API.post(
+        "/auth/login",
         {
           userName: formData.username,
           password: formData.password,

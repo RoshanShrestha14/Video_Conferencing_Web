@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./LeftSection.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API from "../api/api"
 
 function LeftSection() {
   const navigate = useNavigate();
@@ -9,8 +10,8 @@ function LeftSection() {
 
   const createMeeting = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:3002/meeting/new",
+      const response = await API.post(
+        "/meeting/new",
         {},
         { withCredentials: true }
       );

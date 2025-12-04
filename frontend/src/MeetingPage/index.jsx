@@ -7,8 +7,8 @@ import ControlsBar from "./ControlsBar";
 import styles from "./Room.module.css";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import axios from "axios";
 import { useSocket } from "../context/socketContext";
+import API from "../api/api";
 
 function Room() {
   const socket = useSocket();
@@ -19,52 +19,43 @@ function Room() {
   const [userId, setuserId] = useState();
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const verifyCookie = async () => {
+      try {
+        const { data } = await API.post(
+          "/auth/check",
+          {},
+          { withCredentials: true }
+        );
 
-useEffect(() => {
-  const verifyCookie = async () => {
-    try {
-      const { data } = await axios.post("http://localhost:3002/auth/check", {}, { withCredentials: true });
-
-      if (data.success) {
-        setUsername(data.user);
-        setuserId(data.userId);
-      } else {
+        if (data.success) {
+          setUsername(data.user);
+          setuserId(data.userId);
+        } else {
+          removeCookie("token");
+          navigate("/login");
+        }
+      } catch (err) {
         removeCookie("token");
         navigate("/login");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      removeCookie("token");
-      navigate("/login");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  verifyCookie();
-}, []);
+    verifyCookie();
+  }, []);
 
-  useEffect(() => {
 
-  
-    if (!socket) return;
-    socket.emit("join-meeting", meetingCode);
+  if (loading) return <p>Loading...</p>;
 
-     socket.on("user-joined", (data) => {
-      console.log("User joined:", data);
-    });
-  }, [socket]);
-  
-
-if (loading) return <p>Loading...</p>;
-
-return (
-  <div className={styles.roomContainer}>
-    <Header code={meetingCode} userName={username} />
-    <MainContent userName={username} pUserId={userId} />
-    <ControlsBar />
-  </div>
-);
-
+  return (
+    <div className={styles.roomContainer}>
+      <Header code={meetingCode} userName={username} />
+      <MainContent userName={username} pUserId={userId} />
+      <ControlsBar />
+    </div>
+  );
 }
 
 export default Room;
