@@ -30,7 +30,7 @@ export const SocketProvider = ({ children }) => {
     };
   }, []);
 
-  if (!isReady) return console.log("connecting......");
+  if (!isReady) return  <p>connecting.........</p>;
 
   return (
     <SocketContext.Provider value={socketRef.current}>

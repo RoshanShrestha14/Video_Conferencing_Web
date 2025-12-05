@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect, useRef } from "react";
 import styles from "../Room.module.css";
 import MicOffIcon from "@mui/icons-material/MicOff";
-import ParticipantsList from "../ParticipantsList";
 import MicIcon from '@mui/icons-material/Mic';
 
 
@@ -44,7 +43,7 @@ const VideoTile = ({ participant }) => {
               <span className={styles.participantName }>
                 {participant.name} {participant.isLocal && "(You)"}
               </span>
-                {participant.isAudioOn?<MicIcon/>:<MicOffIcon/>}
+                {!participant.isLocal && participant.isAudioOn?<MicIcon/>:<MicOffIcon/>}
             </div>
           </div>
         ) : (

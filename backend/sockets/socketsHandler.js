@@ -49,17 +49,17 @@ module.exports.socketHandler = (io) => {
       });
     });
 
-    socket.on("webrtc-offer", (data) => {
+    socket.on("offer", (data) => {
       console.log(`WebRTC offer from ${socket.id} to ${data.to}`);
-      io.to(data.to).emit("webrtc-offer", {
+      io.to(data.to).emit("offer", {
         from: socket.id,
         offer: data.offer,
       });
     });
 
-    socket.on("webrtc-answer", (data) => {
+    socket.on("answer", (data) => {
       console.log(`WebRTC answer from ${socket.id} to ${data.to}`);
-      io.to(data.to).emit("webrtc-answer", {
+      io.to(data.to).emit("answer", {
         from: socket.id,
         answer: data.answer,
       });
