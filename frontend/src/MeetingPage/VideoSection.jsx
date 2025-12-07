@@ -4,6 +4,7 @@ import { useMedia } from "../context/MediaProvider";
 import { useSocket } from "../context/socketContext";
 import VideoTile from "./memo/VideoTile";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function VideoSection({ username, pUserId }) {
   const { meetingCode } = useParams();
@@ -16,6 +17,7 @@ function VideoSection({ username, pUserId }) {
   const remoteStreamsRef = useRef({});
   const [isReady, setIsReady] = useState(false);
   const peerConnections = useRef({});
+  const [isRemoteAudioOn, setIsRemoteAudioOn] = useState();
 
   const createPeerConnection = (remoteSocketId) => {
     const config = {
@@ -37,17 +39,13 @@ function VideoSection({ username, pUserId }) {
 
     pc.ontrack = (event) => {
       const remoteStream = event.streams[0];
-       const hasVideo = remoteStream.getVideoTracks().length > 0;
-      const hasAudio = remoteStream.getAudioTracks().length > 0;
 
       setParticipants((prev) =>
         prev.map((p) =>
-          p.socketId === remoteSocketId ? { ...p, stream: remoteStream, isVideoOn: hasVideo,
-            isAudioOn: hasAudio, } : p
+          p.socketId === remoteSocketId ? { ...p, stream: remoteStream } : p
         )
       );
     };
-
 
     pc.onicecandidate = (event) => {
       if (event.candidate) {
@@ -62,7 +60,6 @@ function VideoSection({ username, pUserId }) {
     return pc;
   };
 
-  // when user join then this fn call passing with remoteSocketId
   const sendOffer = async (remoteSocketId) => {
     const pc = createPeerConnection(remoteSocketId);
 
@@ -155,20 +152,51 @@ function VideoSection({ username, pUserId }) {
         );
       }
     });
+    socket.on("audio-status", (data) => {
+      const { socketId, audioStatus } = data;
 
+      setParticipants((prev) =>
+        prev.map((p) =>
+          p.socketId === socketId ? { ...p, isAudioOn: audioStatus } : p
+        )
+      );
+    });
+
+    socket.on("video-status", (data) => {
+      const { socketId, videoStatus } = data;
+
+      setParticipants((prev) =>
+        prev.map((p) =>
+          p.socketId === socketId ? { ...p, isVideoOn: videoStatus } : p
+        )
+      );
+    });
+
+    socket.on("user-left", (data) => {
+      const { socketId } = data;
+      console.log(`Socket ${socketId} left the meeting`);
+
+      if (peerConnections.current[socketId]) {
+        peerConnections.current[socketId].close();
+        delete peerConnections.current[socketId];
+      }
+
+      setParticipants((prev) => prev.filter((p) => p.socketId !== socketId));
+    });
     return () => {
       socket.off("user-joined");
       socket.off("offer");
       socket.off("answer");
       socket.off("ice-candidate");
+      socket.off("audio-status");
+      socket.off("video-status");
+      socket.off("user-left");
     };
   }, [socket]);
 
   useEffect(() => {
     socket.on("existing-users", async (data) => {
       if (!data || data.length === 0) return;
-      console.log("exising user ", data);
-
       data.forEach((user) => {
         setParticipants((prev) => {
           const userExists = prev.some((p) => p.userId === user.userId);
@@ -215,8 +243,13 @@ function VideoSection({ username, pUserId }) {
   }, [localStream, username, pUserId, socket, isVideoOn, isAudioOn]);
 
   useEffect(() => {
-    console.log("all participants are : ", participants);
+    socket.emit("updated participants", {
+      participants,
+      meetingCode,
+    });
+    console.log("emmiting participants", participants);
   }, [participants]);
+
   if (!isReady) return <p> video is loading</p>;
   return (
     <div className={styles.videoSection}>

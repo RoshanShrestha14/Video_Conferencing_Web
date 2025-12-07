@@ -7,7 +7,7 @@ import styles from "./Room.module.css";
 function Sidebar() {
   return (
     <aside className={styles.sidebar}>
-      <ParticipantsList />
+      <ParticipantsList/>
       <ChatSection />
     </aside>
   );

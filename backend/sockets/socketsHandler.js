@@ -1,4 +1,5 @@
 const socketAuthMiddleware = require("../Middlewares/SocketAuthMiddleware");
+const allParticipants = [];
 
 module.exports.socketHandler = (io) => {
   io.use(socketAuthMiddleware);
@@ -73,8 +74,45 @@ module.exports.socketHandler = (io) => {
       });
     });
 
-    socket.on("disconnect", () => {
-      console.log(`User disconnected: ${socket.userName}`);
+    socket.on("audio-status", (data) => {
+      const { socketId, audioStatus, meetingCode } = data;
+      console.log(
+        `socket id is ${socketId} and audio status is ${audioStatus}meeting code is ${meetingCode}`
+      );
+
+      io.to(meetingCode).emit("audio-status", {
+        socketId: socketId,
+        audioStatus: audioStatus,
+      });
+    });
+
+    socket.on("video-status", (data) => {
+      const { socketId, videoStatus, meetingCode } = data;
+      console.log(
+        `socket id is ${socketId} and audio status is ${videoStatus} meeting code is ${meetingCode}`
+      );
+
+      io.to(meetingCode).emit("video-status", {
+        socketId: socketId,
+        videoStatus: videoStatus,
+      });
+    });
+
+    socket.on("leave-meeting", (data) => {
+      const { meetingCode } = data;
+      socket.leave(meetingCode);
+
+      socket.to(meetingCode).emit("user-left", {
+        socketId: socket.id,
+      });
+
+      console.log(`${socket.id} left room ${meetingCode}`);
+    });
+
+    socket.on("updated participants", (data) => {
+      console.log("partic is", data.participants);
+      console.log("code is ", data.meetingCode);
+      io.to(data.meetingCode).emit("participants", data.participants);
     });
   });
 };
