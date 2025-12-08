@@ -11,6 +11,7 @@ import Index from "./MeetingPage/index.jsx";
 import { SocketProvider } from "./context/socketContext.jsx";
 import RoomPreview from "./RoomPreview/RoomPreview.jsx";
 import { MediaProvider } from "./context/MediaProvider.jsx";
+import NotFound from "./NotFound.jsx";
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
@@ -39,6 +40,8 @@ createRoot(document.getElementById("root")).render(
             </MediaProvider>
           }
         />
+      <Route path="*" element={<NotFound/>} />
+
       </Routes>
     </Router>
   </CookiesProvider>
