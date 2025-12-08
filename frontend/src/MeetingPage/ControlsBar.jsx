@@ -83,7 +83,7 @@ function ControlsBar() {
           {isVideoOn ? <VideocamIcon /> : <VideocamOffIcon />}
         </button>
         <button onClick={handleScreenShare} className={styles.controlButton}>
-          <ScreenShareIcon /> Screen Share
+          <ScreenShareIcon /> {isScreenSharing?"Stop Screen Share":"Start Screen Share"}
         </button>
         <button className={styles.controlButton}>
           <ChatIcon />

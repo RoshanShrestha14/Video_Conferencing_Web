@@ -3,11 +3,11 @@ import styles from "./Room.module.css";
 import { useMedia } from "../context/MediaProvider";
 import { useSocket } from "../context/socketContext";
 import VideoTile from "./memo/VideoTile";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 function VideoSection({ username, pUserId }) {
   const { meetingCode } = useParams();
+  const navigate = useNavigate();
 
   const { localStream, isVideoOn, isAudioOn } = useMedia();
   const socket = useSocket();
@@ -18,6 +18,8 @@ function VideoSection({ username, pUserId }) {
   const [isReady, setIsReady] = useState(false);
   const peerConnections = useRef({});
   const [isRemoteAudioOn, setIsRemoteAudioOn] = useState();
+
+  
 
   const createPeerConnection = (remoteSocketId) => {
     const config = {
@@ -249,6 +251,57 @@ function VideoSection({ username, pUserId }) {
     });
     console.log("emmiting participants", participants);
   }, [participants]);
+
+
+useEffect(() => {
+  const handleRefresh = () => {
+       socket.emit("leave-meeting", {
+      socketId: socket.id,
+      meetingCode: meetingCode,
+    });
+   
+    let message = "Bye Bye leaving the meeting !"
+    socket.emit("send-messages",{
+      message:message,
+      code:meetingCode
+    })
+    stopAllTracks();
+    navigate("/home");
+  };
+  
+  window.addEventListener('beforeunload', handleRefresh);
+  
+  return () => {
+    window.removeEventListener('beforeunload', handleRefresh);
+  };
+}, [socket, pUserId, meetingCode, localStream]);
+
+
+useEffect(() => {
+  if (!localStream) return;
+  setParticipants(prev =>
+    prev.map(p =>
+      p.isLocal
+        ? { ...p, stream: localStream }   
+        : p
+    )
+  );
+
+  const videoTrack = localStream.getVideoTracks()[0];
+
+Object.values(peerConnections.current).forEach(pc => {
+const sender = pc.getSenders().find(s => s.track?.kind === "video");
+
+if (sender) sender.replaceTrack(videoTrack);
+});
+
+
+
+
+}, [localStream]);  
+
+  
+
 
   if (!isReady) return <p> video is loading</p>;
   return (

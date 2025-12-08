@@ -10,13 +10,11 @@ export const MediaProvider = ({ children }) => {
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isAudioOn, setIsAudioOn] = useState(true);
   const [localStream, setLocalStream] = useState(null);
+  const [cameraStream, setCameraStream] = useState(null); // Add this
 
   const [isScreenSharing, setIsScreenSharing] = useState(false);
 
-  const streamRef = useRef(null); 
-
-
-
+  const streamRef = useRef(null);
 
   const setLocalStreamfn = (stream) => {
     streamRef.current = stream;
@@ -33,30 +31,23 @@ export const MediaProvider = ({ children }) => {
     }
   };
 
-
   const toggleVideo = () => {
     const videoTrack = streamRef.current?.getVideoTracks()[0];
     if (videoTrack) {
       videoTrack.enabled = !videoTrack.enabled;
       setIsVideoOn(videoTrack.enabled);
-      return(videoTrack.enabled);
+      return videoTrack.enabled;
     }
   };
-
-
-
 
   const toggleAudio = () => {
     const audioTrack = streamRef.current?.getAudioTracks()[0];
     if (audioTrack) {
       audioTrack.enabled = !audioTrack.enabled;
       setIsAudioOn(audioTrack.enabled);
-      return(audioTrack.enabled)
-
+      return audioTrack.enabled;
     }
   };
-
-
 
   const stopAllTracks = () => {
     if (streamRef.current) {
@@ -67,35 +58,29 @@ export const MediaProvider = ({ children }) => {
 
   const startScreenShare = async () => {
     try {
+      if (localStream && !cameraStream) {
+        setCameraStream(localStream);
+      }
+
       const screenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
-        audio: false, 
+        audio: true,
       });
 
       setIsScreenSharing(true);
       setLocalStreamfn(screenStream);
-      screenStream.getVideoTracks()[0].onended = () => {
-        stopScreenShare();
-      };
     } catch (err) {
       console.error("Screen share error:", err);
     }
   };
 
   const stopScreenShare = async () => {
-
     if (isScreenSharing) {
       stopAllTracks();
       setIsScreenSharing(false);
-
-      try {
-        const camStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-        setLocalStreamfn(camStream);
-      } catch (err) {
-        console.error("Failed to restore camera:", err);
+      if (cameraStream) {
+        setLocalStreamfn(cameraStream);
+        setCameraStream(null);
       }
     }
   };
@@ -120,8 +105,6 @@ export const MediaProvider = ({ children }) => {
   };
 
   return (
-    <MediaContext.Provider value={value}>
-      {children}
-    </MediaContext.Provider>
+    <MediaContext.Provider value={value}>{children}</MediaContext.Provider>
   );
 };
