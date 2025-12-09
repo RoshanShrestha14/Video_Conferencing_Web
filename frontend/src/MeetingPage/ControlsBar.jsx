@@ -72,7 +72,7 @@ function ControlsBar() {
   return (
     <footer className={styles.controlsBar}>
       <div className={styles.controlsLeft}>
-        <span className={styles.meetingTime}>time</span>
+        <span className={styles.meetingTime}> &nbsp;</span>
       </div>
 
       <div className={styles.controlsCenter}>

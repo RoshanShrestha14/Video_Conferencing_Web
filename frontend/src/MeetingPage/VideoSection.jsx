@@ -19,8 +19,6 @@ function VideoSection({ username, pUserId }) {
   const peerConnections = useRef({});
   const [isRemoteAudioOn, setIsRemoteAudioOn] = useState();
 
-  
-
   const createPeerConnection = (remoteSocketId) => {
     const config = {
       iceServers: [
@@ -252,56 +250,43 @@ function VideoSection({ username, pUserId }) {
     console.log("emmiting participants", participants);
   }, [participants]);
 
+  useEffect(() => {
+    const handleRefresh = () => {
+      socket.emit("leave-meeting", {
+        socketId: socket.id,
+        meetingCode: meetingCode,
+      });
 
-useEffect(() => {
-  const handleRefresh = () => {
-       socket.emit("leave-meeting", {
-      socketId: socket.id,
-      meetingCode: meetingCode,
+      let message = "Bye Bye leaving the meeting !";
+      socket.emit("send-messages", {
+        message: message,
+        code: meetingCode,
+      });
+      stopAllTracks();
+      navigate("/home");
+    };
+
+    window.addEventListener("beforeunload", handleRefresh);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleRefresh);
+    };
+  }, [socket, pUserId, meetingCode, localStream]);
+
+  useEffect(() => {
+    if (!localStream) return;
+    setParticipants((prev) =>
+      prev.map((p) => (p.isLocal ? { ...p, stream: localStream } : p))
+    );
+
+    const videoTrack = localStream.getVideoTracks()[0];
+
+    Object.values(peerConnections.current).forEach((pc) => {
+      const sender = pc.getSenders().find((s) => s.track?.kind === "video");
+
+      if (sender) sender.replaceTrack(videoTrack);
     });
-   
-    let message = "Bye Bye leaving the meeting !"
-    socket.emit("send-messages",{
-      message:message,
-      code:meetingCode
-    })
-    stopAllTracks();
-    navigate("/home");
-  };
-  
-  window.addEventListener('beforeunload', handleRefresh);
-  
-  return () => {
-    window.removeEventListener('beforeunload', handleRefresh);
-  };
-}, [socket, pUserId, meetingCode, localStream]);
-
-
-useEffect(() => {
-  if (!localStream) return;
-  setParticipants(prev =>
-    prev.map(p =>
-      p.isLocal
-        ? { ...p, stream: localStream }   
-        : p
-    )
-  );
-
-  const videoTrack = localStream.getVideoTracks()[0];
-
-Object.values(peerConnections.current).forEach(pc => {
-const sender = pc.getSenders().find(s => s.track?.kind === "video");
-
-if (sender) sender.replaceTrack(videoTrack);
-});
-
-
-
-
-}, [localStream]);  
-
-  
-
+  }, [localStream]);
 
   if (!isReady) return <p> video is loading</p>;
   return (

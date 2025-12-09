@@ -50,6 +50,7 @@ res.json("del all data of meeting ")
 
 
 //routes
+
 app.use("/auth", authRoutes);
 app.use("/meeting", meetingRoutes);
 

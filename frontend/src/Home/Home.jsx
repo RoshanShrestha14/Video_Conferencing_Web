@@ -43,7 +43,7 @@ const HomeDashboard = () => {
 
   return (
     <div className={styles.container}>
-      <Hero user={username} />
+      <Hero user={username.toUpperCase()} />
       <div style={{ marginTop: "2rem" }}>
         <LeftSection />
       </div>

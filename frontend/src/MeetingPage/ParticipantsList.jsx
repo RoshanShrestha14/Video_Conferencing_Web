@@ -21,7 +21,7 @@ const [participants,setParticipants] = useState([]);
 
   return (
     <div className={styles.sidebarSection}>
-      <h3 className={styles.sidebarTitle}>Participants</h3>
+      <h3 className={styles.sidebarTitle}>Participants  {participants.length}</h3>
       <div className={styles.participantsList}>
         {participants.map((participant) => (
           <div key={participant.userId} className={styles.participantItem}>

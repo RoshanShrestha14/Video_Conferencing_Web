@@ -7,6 +7,14 @@ const meetingSchema = new Schema({
     type: String,
     require: true,
   },
+  participants: [
+    {
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    },
+  ],
   date: {
     type: Date,
     default: Date.now,

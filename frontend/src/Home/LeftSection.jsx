@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import styles from "./LeftSection.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import API from "../api/api"
+import API from "../api/api";
+import VideoCallIcon from "@mui/icons-material/VideoCall";
+import PhonelinkIcon from "@mui/icons-material/Phonelink";
 
 function LeftSection() {
   const navigate = useNavigate();
   const [text, setText] = useState("");
+  const [isMeetingExist, setIsMeetingExist] = useState(true);
 
   const createMeeting = async () => {
     try {
@@ -18,23 +21,42 @@ function LeftSection() {
 
       if (response.data.success) {
         let meetingCode = response.data.meeting.meetingCode;
-        navigate(`/roomPreview/${meetingCode}`); 
+        navigate(`/roomPreview/${meetingCode}`);
       }
     } catch (err) {
       console.error("Error creating meeting:", err);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (text.trim() === "") return;
     e.preventDefault();
-    navigate(`/roomPreview/${text}`);
+    try {
+      const response = await API.post(
+        "/meeting/join",
+        {
+          meetingCode: text,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      if (!response.data.success) {
+        setIsMeetingExist(false);
+        return;
+      }
+      navigate(`/roomPreview/${text}`);
+    } catch (err) {
+      console.log("error in join meeting", err);
+    }
   };
 
   return (
     <div className={styles.grid}>
       <div className={styles.card}>
-        <div className={styles.icon}>🎥</div>
+        <div className={styles.icon}>
+          <VideoCallIcon sx={{ fontSize: "5rem", color: "#17054f98" }} />
+        </div>
         <h2 className={styles.cardTitle}>New Meeting</h2>
         <p className={styles.cardDescription}>
           Start an instant meeting with one click
@@ -51,7 +73,9 @@ function LeftSection() {
       </div>
 
       <div className={styles.card}>
-        <div className={styles.icon}>🔗</div>
+        <div className={styles.icon}>
+          <PhonelinkIcon sx={{ fontSize: "5rem", color: "#17054fb7" }} />
+        </div>
         <h2 className={styles.cardTitle}>Join Meeting</h2>
         <div className={styles.inputGroup}>
           <form onSubmit={handleSubmit}>
@@ -71,6 +95,9 @@ function LeftSection() {
             </button>
           </form>
         </div>
+        {!isMeetingExist && (
+          <p style={{ color: "red" }}>Meeting doesn't Exist</p>
+        )}
         <p className={styles.cardFooter}>Enter code provided by meeting host</p>
       </div>
     </div>

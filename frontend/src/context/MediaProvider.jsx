@@ -66,6 +66,12 @@ export const MediaProvider = ({ children }) => {
         video: true,
         audio: true,
       });
+         
+      screenStream.getVideoTracks()[0].onended = async() => {
+      console.log("Browser stop sharing triggered!");
+       await stopScreenShare();
+    };
+
 
       setIsScreenSharing(true);
       setLocalStreamfn(screenStream);
