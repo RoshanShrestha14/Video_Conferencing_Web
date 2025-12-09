@@ -7,7 +7,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const meetingRoutes = require("./routes/meetingRoutes");
-const meetingModel = require("./Models/meetingSchema")
+const meetingModel = require("./Models/meetingSchema");
 
 const app = express();
 
@@ -36,19 +36,13 @@ app.use(
   })
 );
 
-
-app.get("/destroy",async(req,res)=>{
-
- await meetingModel.deleteMany({});
-res.json("del all data of meeting ")
-
-  
+app.get("/destroy", async (req, res) => {
+  await meetingModel.deleteMany({});
+  res.json("del all data of meeting ");
+});
+app.get("/",(req,res)=>{
+  res.json("you are on a home page ")
 })
-
-
-
-
-
 //routes
 
 app.use("/auth", authRoutes);
