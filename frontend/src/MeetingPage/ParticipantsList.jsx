@@ -13,7 +13,6 @@ const [participants,setParticipants] = useState([]);
   useEffect(() => {
     if(!socket) return
     socket.on("participants", (data) => {
-      console.log(data);
 
       setParticipants(data)
     });

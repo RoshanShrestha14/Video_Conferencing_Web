@@ -84,7 +84,6 @@ function VideoSection({ username, pUserId }) {
     socket.emit("join-meeting", meetingCode);
 
     socket.on("user-joined", async (data) => {
-      console.log("User joined:", data);
       if (data.userName && data.userId && data.socketId) {
         setParticipants((prev) => [
           ...prev,

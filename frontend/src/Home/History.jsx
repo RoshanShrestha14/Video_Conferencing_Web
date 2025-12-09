@@ -23,7 +23,6 @@ function History() {
   }, []);
 
   useEffect(() => {
-    console.log("hsitory is", history);
   }, [history]);
 
   const formatDate = (isoString) => {

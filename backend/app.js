@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true })); // For form data
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
