@@ -13,7 +13,7 @@ export const SocketProvider = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    socketRef.current = io(VITE_LOCAL_API, {
+    socketRef.current = io(VITE_API_URL, {
       withCredentials: true,
       autoConnect: true,
     });
