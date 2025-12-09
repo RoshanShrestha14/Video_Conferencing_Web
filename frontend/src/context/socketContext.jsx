@@ -1,5 +1,5 @@
 import React, { useRef, createContext, useContext, useEffect, useState } from "react";
-const VITE_LOCAL_API = import.meta.env.VITE_LOCAL_API;
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 
 import { io } from "socket.io-client"; 
