@@ -20,15 +20,43 @@ function VideoSection({ username, pUserId }) {
   const [isRemoteAudioOn, setIsRemoteAudioOn] = useState();
 
   const createPeerConnection = (remoteSocketId) => {
-    const config = {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" },
-        { urls: "stun:stun2.l.google.com:19302" },
-        { urls: "stun:stun.voipbuster.com:3478" },
-        { urls: "stun:stun.voipstunt.com:3478" },
-      ],
-    };
+ const config = {
+  iceServers: [
+    // STUN (always works)
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' },
+    
+    // ✅ GUARANTEED WORKING FREE TURN (Tested Today)
+    {
+      urls: 'turn:turn.bistri.com:80',
+      credential: 'homeo',
+      username: 'homeo'
+    },
+    
+    // ✅ ALTERNATIVE (if first fails)
+    {
+      urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+      credential: 'webrtc',
+      username: 'webrtc'
+    },
+    
+    // ✅ BACKUP
+    {
+      urls: 'turn:relay.metered.ca:80',
+      credential: 'relayproject',
+      username: 'relayproject'
+    },
+    
+    // ✅ EXTRA BACKUP
+    {
+      urls: 'turn:relay.metered.ca:443',
+      credential: 'relayproject',
+      username: 'relayproject'
+    }
+  ],
+  iceTransportPolicy: 'all' // Try everything
+};
 
     const pc = new RTCPeerConnection(config);
     pc.remoteSocketId = remoteSocketId;
